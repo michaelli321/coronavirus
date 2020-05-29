@@ -62,13 +62,6 @@ if __name__=="__main__":
     timesteps = 600 # 130000 # hours 2160
 
     people = initialize(n, 0, max_x, 0, max_y, 0, bias)
-    # fig = plt.figure(figsize=(20,15))
-    # fig = plt.figure(figsize=(15, 10))
-    # ax = fig.add_subplot(111)
-
-    # plt.ion()
-    # fig.show()
-    # fig.canvas.draw()
 
     healthy_time = []
     infected_time = []
@@ -132,8 +125,11 @@ if __name__=="__main__":
     recovered_time = np.array(recovered_time)
     dead_time = np.array(dead_time)
     plt.close()
-    plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g")
-    plt.plot(infected_time[:, 0], infected_time[:, 1], "r")
-    plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b")
+    plt.xlabel('Time (Hours)')
+    plt.ylabel('# of People')
+    plt.title('Spread of Coronavirus w/No Restrictions')
+    plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g", label='# Healthy')
+    plt.plot(infected_time[:, 0], infected_time[:, 1], "r", label='# Infected')
+    plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b", label="# Recovered")
     # plt.plot(dead_time[:, 0], dead_time[:, 1], "k")
     plt.show()
