@@ -31,16 +31,18 @@ def infect(p1, p2):
     return -0.0008 + 0.5 * np.exp(-0.27 * distance(p1, p2))
     # return (-0.01 * (distance(p1, p2)) + .25)
 
-def infect_mask(p1, p2):
-    return 0
-
 def update_infection(p1, p2, i):
-    if random.random() < infect(p1, p2):
-        p2.state = 1
-        p2.infection_time = i if p2.infection_time == -1 else p2.infection_time
+    if p1.state == 1 and p2.state == 0:
+        if random.random() < infect(p1, p2):
+            p2.state = 1
+            p2.infection_time = i if p2.infection_time == -1 else p2.infection_time
+    elif p1.state == 0 and p1.state == 1:
+        if random.random() < infect(p1, p2):
+            p1.state = 1
+            p1.infection_time = i if p1.infection_time == -1 else p1.infection_time
         # print("new person infected %d", i)
 
-    return p2
+    return p1, p2
 
 def update_recovery(p1, i):
     if p1.infection_time >= 0 and i - p1.infection_time == 336:
@@ -108,15 +110,28 @@ if __name__=="__main__":
         print("%d healthy %d infected %d recovered %d dead %d" % (time, num_healthy,
             num_infected, num_recovered, num_dead))
 
-
-        for infected in infected_indices:
-            for healthy in healthy_indices:
-                people[healthy] = update_infection(people[infected], people[healthy], time)
+        changed_inds = set()
 
         for i in range(len(people)):
-            people[i].update_velocity(0, max_x, 0, max_y)
-            people[i] = update_recovery(people[i], time)
+            for j in range(i+1, len(people)):
+                people[i], people[j] = update_infection(people[i], people[j], time)
+
+                if math.sqrt((people[i].x_loc+people[i].velocity[0] - people[j].x_loc-people[j].velocity[0])**2 + (people[i].y_loc+people[i].velocity[1] - people[j].y_loc-people[j].velocity[1])**2) <= 6:
+                    if i not in changed_inds and j not in changed_inds: # and random.random() < .8:
+                        if people[i].x_loc < people[j].x_loc:
+                            people[i].update_velocity(0, max_x, 0, max_y, 1)
+                            people[j].update_velocity(0, max_x, 0, max_y, 1)
+                            changed_inds.add(i)
+                            changed_inds.add(j)
+
+            if i not in changed_inds:
+                people[i].update_velocity(0, max_x, 0, max_y)
+
+        
+        for i in range(len(people)):
             people[i].move()
+            people[i] = update_recovery(people[i], time)
+
 
     print(healthy_time)
     healthy_time = np.array(healthy_time)
@@ -126,7 +141,7 @@ if __name__=="__main__":
     plt.close()
     plt.xlabel('Time (Hours)')
     plt.ylabel('# of People')
-    plt.title('Spread of Coronavirus w/No Restrictions')
+    plt.title('Spread of Coronavirus w/Social Distancing')
     plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g", label='# Healthy')
     plt.plot(infected_time[:, 0], infected_time[:, 1], "r", label='# Infected')
     plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b", label="# Recovered")

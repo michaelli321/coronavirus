@@ -35,7 +35,6 @@ def infect(p1, p2):
         return 0.1 * (-0.0008 + 0.5 * np.exp(-0.27 * distance(p1, p2)))
     return -0.0008 + 0.5 * np.exp(-0.27 * distance(p1, p2))
 
-
 def infect_mask(p1, p2):
     return 0
 
@@ -138,7 +137,7 @@ if __name__=="__main__":
     plt.close()
     plt.xlabel('Time (Hours)')
     plt.ylabel('# of People')
-    plt.title('Spread of Coronavirus w/No Restrictions')
+    plt.title('Spread of Coronavirus w/Stay at Home Order')
     plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g", label='# Healthy')
     plt.plot(infected_time[:, 0], infected_time[:, 1], "r", label='# Infected')
     plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b", label="# Recovered")

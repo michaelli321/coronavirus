@@ -1,4 +1,5 @@
 import random
+import math
 
 class Person:
     def __init__(self, location, state, mask):
@@ -15,9 +16,16 @@ class Person:
         self.x_loc = self.x_loc + self.velocity[0]
         self.y_loc = self.y_loc + self.velocity[1]
 
-    def update_velocity(self, min_x, max_x, min_y, max_y):
-        if self.x_loc + self.velocity[0] < min_x or self.x_loc + self.velocity[0] > max_x:
-            self.velocity[0] = -1 * self.velocity[0]
+    def _distance(self, p2):
+        return math.sqrt((self.x_loc - p2.x_loc)**2 + (self.y_loc - p2.y_loc)**2)
 
-        if self.y_loc + self.velocity[1] > max_y or self.y_loc + self.velocity[1] < min_y:
-            self.velocity[1] = -1 * self.velocity[1]
+    def update_velocity(self, min_x, max_x, min_y, max_y, distancing=0):
+        if distancing:
+            self.velocity[0] = -1 * self.velocity[0]
+            self.velocity[1] = -1 * self.velocity[1]              
+        else:
+            if self.x_loc + self.velocity[0] < min_x or self.x_loc + self.velocity[0] > max_x:
+                self.velocity[0] = -1 * self.velocity[0]
+
+            if self.y_loc + self.velocity[1] > max_y or self.y_loc + self.velocity[1] < min_y:
+                self.velocity[1] = -1 * self.velocity[1]
