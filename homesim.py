@@ -15,6 +15,9 @@ def initialize(n, min_x, max_x, min_y, max_y, mask_simulation, bias):
             mask = random.choice([0, 1])
 
         person = Person(random_location, 0, mask)
+        if random.random() < .7:
+            person.velocity = [0, 0] # [((random.random()*3.5)-1.75) / 7.0, ((random.random()*3.5)-1.75) / 7.0]
+            person.home = 1
 
         if i < bias * n:
             person.infection_time = 0
@@ -28,8 +31,10 @@ def distance(p1, p2):
     return math.sqrt((p1.x_loc - p2.x_loc)**2 + (p1.y_loc - p2.y_loc)**2)
 
 def infect(p1, p2):
+    if p2.home:
+        return 0.1 * (-0.0008 + 0.5 * np.exp(-0.27 * distance(p1, p2)))
     return -0.0008 + 0.5 * np.exp(-0.27 * distance(p1, p2))
-    # return (-0.01 * (distance(p1, p2)) + .25)
+
 
 def infect_mask(p1, p2):
     return 0
@@ -102,7 +107,7 @@ if __name__=="__main__":
             if num_dead:
                 plt.plot(dead_locs[:,0], dead_locs[:,1], 'ko')
             plt.axis([0, max_x, 0, max_y])
-            plt.pause(0.001)
+            plt.pause(0.01)
 
         if time == 0 or num_healthy != healthy_time[-1][1] or time == timesteps - 1:
             healthy_time.append([time, num_healthy])
@@ -113,8 +118,7 @@ if __name__=="__main__":
         if time == 0 or num_dead != dead_time[-1][1] or time == timesteps - 1:
             dead_time.append([time, num_dead])
 
-        print("%d healthy %d infected %d recovered %d dead %d" % (time, num_healthy,
-            num_infected, num_recovered, num_dead))
+        print("healthy %d infected %d recovered %d dead %d" % (num_healthy, num_infected, num_recovered, num_dead))
 
 
         for infected in infected_indices:
