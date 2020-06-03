@@ -141,5 +141,6 @@ if __name__=="__main__":
     plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g", label='# Healthy')
     plt.plot(infected_time[:, 0], infected_time[:, 1], "r", label='# Infected')
     plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b", label="# Recovered")
+    plt.legend(loc='upper right')
     # plt.plot(dead_time[:, 0], dead_time[:, 1], "k")
     plt.show()

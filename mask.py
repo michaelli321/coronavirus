@@ -131,7 +131,7 @@ if __name__=="__main__":
                 people[i], people[j] = update_infection(people[i], people[j], time)
 
                 if math.sqrt((people[i].x_loc+people[i].velocity[0] - people[j].x_loc-people[j].velocity[0])**2 + (people[i].y_loc+people[i].velocity[1] - people[j].y_loc-people[j].velocity[1])**2) <= 6:
-                    if i not in changed_inds and j not in changed_inds: # and random.random() < .8:
+                    if i not in changed_inds and j not in changed_inds and random.random() < .8: # and random.random() < .8:
                         if people[i].x_loc < people[j].x_loc:
                             people[i].update_velocity(0, max_x, 0, max_y, 1)
                             people[j].update_velocity(0, max_x, 0, max_y, 1)
@@ -155,9 +155,10 @@ if __name__=="__main__":
     plt.close()
     plt.xlabel('Time (Hours)')
     plt.ylabel('# of People')
-    plt.title('Spread of Coronavirus w/Social Distancing')
+    plt.title('Spread of Coronavirus w/Social Distancing+Mask')
     plt.plot(healthy_time[:, 0], healthy_time[:, 1], "g", label='# Healthy')
     plt.plot(infected_time[:, 0], infected_time[:, 1], "r", label='# Infected')
     plt.plot(recovered_time[:, 0], recovered_time[:, 1], "b", label="# Recovered")
+    plt.legend(loc='upper right')
     # plt.plot(dead_time[:, 0], dead_time[:, 1], "k")
     plt.show()
